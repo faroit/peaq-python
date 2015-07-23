@@ -1,0 +1,22 @@
+/* PEAQ options */
+struct PQ_Opt {
+  double Lp;			/* Maximum listening level (dB SPL) */
+  int Ni;			/* Print every NI'th PEAQ frame */
+  int ClipMOV;			/* MOV clipping flag */
+  double PCinit;		/* Initial value for pattern corrections */
+  double PDfactor;		/* Forgetting factor for prob. detection */
+  int OverlapDelay;		/* Overlap warmup frames and delay */
+  int DataBounds;		/* Find data boundaries */
+  int EndMin;			/* Min. number of samples in last PEAQ frame */
+};
+
+void peaqc_setopt(struct PQ_Opt *opt);
+
+struct peaqc_result {
+    ...;
+    double DI;
+    double ODG;
+};
+
+struct peaqc_result peaqc_eval(const double *xr, const double *xt, size_t nsamp);
+//double peaqc_eval(const double *xr, const double *xt, size_t nsamp);
