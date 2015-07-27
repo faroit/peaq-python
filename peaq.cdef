@@ -1,3 +1,17 @@
+struct peaqc_vars {
+    double FS;  /* Sampling frequency (double) */
+    int NF;  /* Frame length */
+    int CB_ADV;  /* Frame advance */
+    int FB_ADV;  /* Sub-sampling factor in filter bank */
+    double FCS;  /* Test sine frequency */
+    double AMAX;  /* Max. input level corresponding to the max. listening level */
+    int NL;  /* Number of correlation lags (EHS MOV) */
+    int MAXNC;  /* Maximum number of channels */
+    int NMOV_MAX;
+};
+
+void peaqc_getvars(struct peaqc_vars *vars);
+
 /* PEAQ options */
 struct PQ_Opt {
   double Lp;			/* Maximum listening level (dB SPL) */
@@ -10,7 +24,7 @@ struct PQ_Opt {
   int EndMin;			/* Min. number of samples in last PEAQ frame */
 };
 
-void peaqc_setopt(struct PQ_Opt *opt);
+void peaqc_defaultopt(struct PQ_Opt *opt);
 
 struct peaqc_result {
     ...;
@@ -18,5 +32,4 @@ struct peaqc_result {
     double ODG;
 };
 
-struct peaqc_result peaqc_eval(const double *xr, const double *xt, size_t nsamp);
-//double peaqc_eval(const double *xr, const double *xt, size_t nsamp);
+void peaqc_eval(struct peaqc_result *results, const double *xr, const double *xt, size_t nsamp, struct PQ_Opt *opt);
