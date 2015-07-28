@@ -16,7 +16,7 @@ ffi = FFI()
 
 ffi.set_source(
     'peaqc',
-    readstring('peaq/peaq.h'),
+    readstring('_cffi_build/peaq.h'),
     library_dirs=[
         'afsp/lib',
     ],
@@ -33,7 +33,7 @@ ffi.set_source(
     extra_compile_args=['-std=c99']
 )
 
-ffi.cdef(readstring('peaq/peaq.cdef'))
+ffi.cdef(readstring('_cffi_build/peaq.cdef'))
 
 if __name__ == '__main__':
     ffi.compile()
