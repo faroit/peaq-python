@@ -16,7 +16,10 @@ ffi.set_source(
         'AO',
         'tsplite',
     ],
-    include_dirs=['afsp/include'],
+    include_dirs=[
+        'afsp/include',
+        'afsp/audio/PQevalAudio'
+    ],
     extra_objects=[],
     extra_compile_args=['-std=c99']
 )

@@ -1,8 +1,8 @@
-#include <libtsp.h>
-#include <libtsp/AFpar.h>
-#include <AO.h>
+#include "libtsp.h"
+#include "libtsp/AFpar.h"
+#include "AO.h"
 
-#include "afsp/audio/PQevalAudio/PQevalAudio.h"
+#include "PQevalAudio.h"
 
 void
 PQ_InitMOVC (struct PQ_MOVBC *MOVC, int Nchan, int Np)
@@ -79,14 +79,14 @@ void peaqc_getvars(struct peaqc_vars *vars) {
 }
 
 void peaqc_defaultopt(struct PQ_Opt *opt) {
-    opt->Lp = 92.;
+    opt->Lp = LP_DEFAULT;
     opt->Ni = 0;
-    opt->ClipMOV = 0;
-    opt->PCinit = 0.;
-    opt->PDfactor = 1.;
-    opt->OverlapDelay = 1;
-    opt->DataBounds = 0;
-    opt->EndMin = PQ_NF / 2;
+    opt->ClipMOV = CLIP_MOV_DEFAULT;
+    opt->PCinit = PC_INIT_DEFAULT;
+    opt->PDfactor = PD_FACTOR_DEFAULT;
+    opt->OverlapDelay = OVERLAP_DELAY_DEFAULT;
+    opt->DataBounds = DATA_BOUNDS_DEFAULT;
+    opt->EndMin = END_MIN_DEFAULT;
 }
 
 struct peaqc_result {
