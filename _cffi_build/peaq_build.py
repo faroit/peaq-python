@@ -7,9 +7,9 @@ ffi = FFI()
 
 ffi.set_source(
     'peaqc',
-    readstring('peaq.h'),
+    readstring('peaq/peaq.h'),
     library_dirs=[
-        'afsp/lib',
+        'peaq/afsp/lib',
     ],
     libraries=[
         'PQevalAudio',
@@ -17,14 +17,14 @@ ffi.set_source(
         'tsplite',
     ],
     include_dirs=[
-        'afsp/include',
-        'afsp/audio/PQevalAudio'
+        'peaq/afsp/include',
+        'peaq/afsp/audio/PQevalAudio'
     ],
     extra_objects=[],
     extra_compile_args=['-std=c99']
 )
 
-ffi.cdef(readstring('peaq.cdef'))
+ffi.cdef(readstring('peaq/peaq.cdef'))
 
 if __name__ == '__main__':
     ffi.compile()
