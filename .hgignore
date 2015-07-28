@@ -1,3 +1,4 @@
 syntax: glob
 build/**
-peaq/afsp/**
+afsp/**
+.eggs/**

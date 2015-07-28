@@ -2,6 +2,15 @@ def readstring(fn):
     with open(fn, mode='rt') as f:
         return f.read()
 
+import os
+
+os.chdir('afsp')
+os.system('make clean')
+os.system("make 'COPTS=-O -fPIC'")
+os.chdir('audio/PQevalAudio')
+os.system('make -f ../../../Makefile.PQevalAudio')
+os.chdir('../../..')
+
 from cffi import FFI
 ffi = FFI()
 
@@ -9,7 +18,7 @@ ffi.set_source(
     'peaqc',
     readstring('peaq/peaq.h'),
     library_dirs=[
-        'peaq/afsp/lib',
+        'afsp/lib',
     ],
     libraries=[
         'PQevalAudio',
@@ -17,8 +26,8 @@ ffi.set_source(
         'tsplite',
     ],
     include_dirs=[
-        'peaq/afsp/include',
-        'peaq/afsp/audio/PQevalAudio'
+        'afsp/include',
+        'afsp/audio/PQevalAudio'
     ],
     extra_objects=[],
     extra_compile_args=['-std=c99']

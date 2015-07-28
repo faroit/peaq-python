@@ -6,11 +6,7 @@ Requirements for building Python bindings for AFsp PQevalAudio:
 Tested on Python 3.4 with NumPy 1.8.2 and CFFI 1.1.2, using AFsp v9r0.
 
 How to build:
-* Build PQevalAudio in library form. You can use the included Makefile.
-  Other changes (not documented here) are required for a successful build.
-  This step should yield afsp/lib/libPQevalAudio.a among others.
-* Run peaq_build.py to generate the CFFI extension.
-* The PEAQ bindings are now ready for use.
+Simply run 'python setup.py install'.
 Read the source for how to use the API.
 Testing is done by comparing output with that of the PQevalAudio executable.
 No unit test available yet.
