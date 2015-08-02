@@ -96,7 +96,7 @@ struct peaqc_result {
 };
 
 void peaqc_eval(struct peaqc_result *results, const double *xr, const double *xt, size_t nsamp, struct PQ_Opt *opt) {
-    size_t Np = nsamp / PQ_CB_ADV;
+    int Np = (nsamp + PQ_CB_ADV - 1) / PQ_CB_ADV;
 
     struct PQ_MOVBC MOVC;
     PQ_InitMOVC(&MOVC, 1, Np);
@@ -116,6 +116,74 @@ void peaqc_eval(struct peaqc_result *results, const double *xr, const double *xt
             PQprtMOVCi (1, i, &MOVC);
         }
     }
+
+    PQavgMOVB(&MOVC, 1, 0, Np, results->MOV);
+
+    double ODG = PQnNet(results->MOV, &(par.NNet), &(results->DI));
+    results->ODG = ODG;
+}
+
+#define Q (PQ_NF / PQ_CB_ADV)
+
+void peaqc_eval_safe(struct peaqc_result *results, const double *xr, const double *xt, size_t nsamp, struct PQ_Opt *opt) {
+    int Np = (nsamp + PQ_CB_ADV - 1) / PQ_CB_ADV;
+
+    struct PQ_MOVBC MOVC;
+    PQ_InitMOVC(&MOVC, 1, Np);
+    MOVC.PD.c1 = opt->PDfactor;
+
+    struct PQ_Par par;
+    PQgenTables(0, opt, &par);
+
+    struct PQ_FiltMem fmem;
+    PQinitFMem(par.CB.Nc, opt->PCinit, &fmem);
+
+    // number of blocks to read before zero-padding is needed
+    int lim = Np - Q;
+    if (nsamp % PQ_CB_ADV == 0) {
+        // full last block, allow to read one more block w/o zero padding
+        lim++;
+    }
+
+    int i;
+    for (i = 0; i < lim; i++) {
+        struct PQ_MOVBI movbi = PQeval(xr+i*PQ_CB_ADV, xt+i*PQ_CB_ADV, &par, &fmem);
+        PQframeMOVB(&movbi, 1, i, &MOVC);
+
+        if (opt->Ni != 0 && i % opt->Ni == 0) {
+            PQprtMOVCi (1, i, &MOVC);
+        }
+    }
+
+    // initialize padded blocks
+    // current i: start of first block that needs zero padding
+    int bufblk = Np - lim + Q - 1;
+    size_t nbuf = bufblk * PQ_CB_ADV;
+    // number of samples to copy and to zero-pad
+    size_t ncopy = nsamp - lim * PQ_CB_ADV;
+    assert (ncopy < nbuf);
+    size_t npad = nbuf - ncopy;
+
+    double *rbuf = malloc(nbuf * sizeof(double));
+    double *tbuf = malloc(nbuf * sizeof(double));
+
+    memcpy(rbuf, xr+lim*PQ_CB_ADV, ncopy * sizeof(double));
+    memcpy(tbuf, xt+lim*PQ_CB_ADV, ncopy * sizeof(double));
+    memset(rbuf + ncopy, 0, npad * sizeof(double));
+    memset(tbuf + ncopy, 0, npad * sizeof(double));
+
+    for (i = lim; i < Np; i++) {
+        int bufpos = i - lim;
+        struct PQ_MOVBI movbi = PQeval(rbuf+bufpos*PQ_CB_ADV, tbuf+bufpos*PQ_CB_ADV, &par, &fmem);
+        PQframeMOVB(&movbi, 1, i, &MOVC);
+
+        if (opt->Ni != 0 && i % opt->Ni == 0) {
+            PQprtMOVCi (1, i, &MOVC);
+        }
+    }
+
+    free(rbuf);
+    free(tbuf);
 
     PQavgMOVB(&MOVC, 1, 0, Np, results->MOV);
 

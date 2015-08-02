@@ -32,4 +32,8 @@ struct peaqc_result {
     double ODG;
 };
 
+// peaqc_eval will assume sufficient zero-padding and will not do any bounds-checking!
 void peaqc_eval(struct peaqc_result *results, const double *xr, const double *xt, size_t nsamp, struct PQ_Opt *opt);
+
+// peaqc_eval_safe does not assume zero-padding and will do its own padding
+void peaqc_eval_safe(struct peaqc_result *results, const double *xr, const double *xt, size_t nsamp, struct PQ_Opt *opt);
