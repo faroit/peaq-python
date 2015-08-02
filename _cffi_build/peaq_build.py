@@ -4,12 +4,15 @@ def readstring(fn):
 
 import os
 
-os.chdir('afsp')
-os.system('make clean')
-os.system("make 'COPTS=-O -fPIC'")
-os.chdir('audio/PQevalAudio')
-os.system('make -f ../../../Makefile.PQevalAudio')
-os.chdir('../../..')
+if os.getenv('NRC') == '1':
+    pass
+else:
+    os.chdir('afsp')
+    os.system('make clean')
+    os.system("make 'COPTS=-O -fPIC'")
+    os.chdir('audio/PQevalAudio')
+    os.system('make -f ../../../Makefile.PQevalAudio')
+    os.chdir('../../..')
 
 from cffi import FFI
 ffi = FFI()
