@@ -3,7 +3,8 @@
     Requirements for building Python bindings for AFsp PQevalAudio:
     * Python + NumPy + CFFI
     * C compiler
-    * AFsp source code (put in afsp/)
+    * AFsp source code (http://www-mmsp.ece.mcgill.ca/documents/Software/)
+      Put AFsp source code in afsp/
 
     Tested on Python 3.4 with NumPy 1.8.2 and CFFI 1.1.2, using AFsp v9r0.
 
